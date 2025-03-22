@@ -1,20 +1,7 @@
 import { Box, Environment, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { Physics } from "@react-three/rapier";
-
-// Simple component without physics for testing
-const SimpleScene = () => {
-  return (
-    <>
-      <ambientLight intensity={1.0} />
-      <directionalLight position={[5, 5, 5]} intensity={1.0} />
-      <Box position={[0, 0, 0]} args={[1, 1, 1]}>
-        <meshStandardMaterial color="orange" />
-      </Box>
-      <gridHelper args={[10, 10]} />
-    </>
-  );
-};
+import { Physics, RigidBody } from "@react-three/rapier";
+import { Terrain } from "./components/Terrain";
 
 export function App() {
   return (
@@ -65,12 +52,42 @@ export function App() {
           shadow-normalBias={0.02}
         />
         <Physics
-          debug={false}
+          debug={true}
           timeStep={1 / 60}
           interpolate={true}
           gravity={[0, -9.81, 0]}
         >
-          <SimpleScene />
+          <Terrain
+            width={100}
+            height={100}
+            resolution={64}
+            amplitude={5}
+            seed={Math.random() * 100}
+            color="#4b9e30"
+          />
+          <RigidBody type="dynamic" colliders="cuboid" position={[0, 15, 0]}>
+            <Box args={[1, 1, 1]}>
+              <meshStandardMaterial color="orange" />
+            </Box>
+          </RigidBody>
+
+          <RigidBody type="dynamic" colliders="cuboid" position={[5, 18, 3]}>
+            <Box args={[2, 2, 2]}>
+              <meshStandardMaterial color="red" />
+            </Box>
+          </RigidBody>
+
+          <RigidBody type="dynamic" colliders="cuboid" position={[-6, 20, -4]}>
+            <Box args={[1.5, 1.5, 1.5]}>
+              <meshStandardMaterial color="blue" />
+            </Box>
+          </RigidBody>
+
+          <RigidBody type="dynamic" colliders="cuboid" position={[3, 22, -7]}>
+            <Box args={[1, 2, 1]}>
+              <meshStandardMaterial color="purple" />
+            </Box>
+          </RigidBody>
         </Physics>
         <OrbitControls />
       </Canvas>
